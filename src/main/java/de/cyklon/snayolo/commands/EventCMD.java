@@ -16,9 +16,6 @@ import java.util.List;
 
 public class EventCMD implements CommandExecutor, TabCompleter, Constants {
 
-    public static void main() {
-
-    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
