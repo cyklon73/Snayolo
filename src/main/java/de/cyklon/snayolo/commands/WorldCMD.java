@@ -2,7 +2,6 @@ package de.cyklon.snayolo.commands;
 
 import de.cyklon.snayolo.util.ChatFormatter;
 import de.cyklon.snayolo.util.Constants;
-import de.cyklon.snayolo.util.Util;
 import io.github.cyklon73.cytils.bukkit.generator.chunk.EmptyChunkGenerator;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

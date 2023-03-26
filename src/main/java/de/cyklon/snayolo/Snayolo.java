@@ -8,7 +8,6 @@ import de.cyklon.snayolo.game.Game;
 import de.cyklon.snayolo.game.PlayerBoard;
 import de.cyklon.snayolo.listener.*;
 import org.bukkit.*;
-import org.bukkit.boss.BossBar;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
