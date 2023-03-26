@@ -1,0 +1,46 @@
+Bitte bau ein Anti X-Ray ein!
+
+Die Spieler joinen in die Lobby Welt. Von dort an, wird dann gewartet, bis das Event startet. Leute, die nach Eventstart joinen, werden das Schauspiel in der Event Welt im Spielmodus "Spectator" betrachten.
+
+/world tp event -> teleportiert dich in ne Welt, deren Ordner "event" heisst (also heisst die Welt event). In dieser Welt funktioneirt NICHTS ohne, dass Snayo (oder ein Admin) den /start Befehl in der Lobby ausführt.
+
+Beim /start Befehl, werden alle Spieler, die in der Lobby sind in die event Welt teleportiert. Nach einem 5 Sekunden Countdown, der GROSS auf dem Bildschirm angezeigt wird, 
+werden die Spieler werden in den Survival Modus versetzt (Die Spieler können jederart Schaden annehmen, ausser Spielerschaden). Über der XP-Leiste wird ein Countdown angezeigt, 
+der den Countdown zur nächsten Zombiewelle anzeigt(also 10 Minuten und im folgendem Format anzeigen: "Nächste Welle: Xm Xs" (X= Zahl)). 
+
+Wenn ein Spieler stirbt, wird er Spectator gesetzt!
+
+Nach den ERSTEN 10 Minuten:
+- spawnen 5 normale Zombies im Radius von 30 Blöcken und machen 1,5 Herzen Schaden (egal ob der Spieler Rüstung hat oder nicht)
+
+Nach den ZWEITEN 10 Minuten:
+- spawnen 5 normale Zombies im Radius von 30 Blöcken und machen 3 Herzen Schaden (egal ob der Spieler Rüstung hat oder nicht)
+
+Nach den DRITTEN 10 Minuten:
+- spawnen 5 normale Zombies im Radius von 30 Blöcken und machen 5 Herzen Schaden (egal ob der Spieler Rüstung hat oder nicht)
+
+Nach den VIERTEN 10 Minuten:
+- spawnen 5 Zombies mit kompletter Eisenrüstung im Radius von 30 Blöcken und machen 2 Herzen Schaden (egal ob der Spieler Rüstung hat oder nicht)
+
+Nach den FÜNFTEN 10 Minuten:
+- spawnen 5 Zombies mit kompletter Eisenrüstung und Eisenschwert im Radius von 30 Blöcken und machen 2 Herzen + Eisenschwert Damage Schaden (egal ob der Spieler Rüstung hat oder nicht)
+
+Nach den SECHSTEN 10 Minuten:
+- spawnen 5 Zombies mit kompletter Diamantrüstung im Radius von 30 Blöcken und machen 4 Herzen Schaden (egal ob der Spieler Rüstung hat oder nicht)
+
+Nach den SIEBTEN 10 Minuten:
+- spawnen 10 Zombies mit kompletter Diamantrüstung im Radius von 30 Blöcken und machen 5 Herzen Schaden (egal ob der Spieler Rüstung hat oder nicht)
+
+Nach den ACHTEN 10 Minuten kommt dann das Finale:
+- Es spawnen 10 Zombies mit kompletter Diamantrüstung im Radius von 30 Blöcken und machen 6,5 Herzen Schaden WICHTIG: Der Spieler bekommt mit Rüstung 2 Herzen weniger Schaden
+
+Der Gewinner wird später in die Lobby, auf das "Podest" bei X: 28, Y: 66, Z: 25 teleportiert und joint dem IN-GAME Team "gewinner". Im Chat wird ausgegeben: "Herzlichen Glückwunsch {Spielername}, du hast das Event gewonnen!"
+Die anderen Spieler werden als Spectator in die Lobby teleportiert.
+
+
+Es wäre auch geil, wenn du mich auf dem laufenden hälst, was du so gemacht hast :).
+
+Als Gewinn würd ich dem Gewinner einen kleinen MC-Server (für ca. 3 Wochen) bereit stellen (natürlich aus eigener Tasche und auf eigenes Risiko)
+
+
+Das wäre es gewesen, Viel Spass beim coden :)
