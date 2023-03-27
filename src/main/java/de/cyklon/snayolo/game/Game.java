@@ -1,6 +1,7 @@
 package de.cyklon.snayolo.game;
 
 import de.cyklon.snayolo.util.Constants;
+import de.cyklon.snayolo.util.EventPlayer;
 import de.cyklon.snayolo.util.Util;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -51,6 +52,14 @@ public class Game implements Constants {
         startCountdown();
     }
 
+    public void onDeath(EventPlayer ep) {
+        ep.setSpectator(true);
+        if (instance().playerBoard.getLivingPlayerCount()==0) {
+            instance().end();
+            //TODO ep win as last standing player
+        }
+    }
+
     private void updateWaveDisplay() {
         this.waveDisplay.setTitle(String.format("%sWaves %s%s%s/%s%s", ChatColor.YELLOW, ChatColor.AQUA, waves, ChatColor.DARK_GRAY, ChatColor.AQUA, totalWaves));
     }
@@ -92,33 +101,42 @@ public class Game implements Constants {
                     seconds--;
                 } else {
                     waves++;
-                    //seconds = 10 * 60;
-                    seconds = 10;
-                    updateWaveDisplay();
-                    Bukkit.getOnlinePlayers().forEach((p) -> {
-                        int radius = 30;
-                        //Location[] locations = Util.Location.radius(p, radius);
-                        int amount = switch (waves) {
-                            case 1, 2, 3, 4, 5, 6 -> 5;
-                            case 7, 8 -> 10;
-                            default -> 0;
-                        };
-                        double damage = switch (waves) {
-                            case 1 -> 1.5;
-                            case 2 -> 3;
-                            case 3, 7 -> 5;
-                            case 4, 5 -> 2;
-                            case 6 -> 4;
-                            case 8 -> 6.5;
-                            default -> 0;
-                        };
-                        Zombie[] zombies = new Zombie[amount];
-                        for (int i = 0; i < zombies.length; i++) {
-                            //zombies[i] = spawnZombie(Random.randomChoice(locations), damage, armor[waves-1]);
-                            zombies[i] = spawnZombieAroundPlayer(p, radius, damage, armor[waves - 1]);
-                        }
-                        addZombie(p, zombies);
-                    });
+                    if (waves>totalWaves) {
+                        Collection<Player> winners = instance().playerBoard.getLivingPlayers();
+                        instance().end();
+                        winners.forEach((p) -> {
+
+                        });
+                        cancel();
+                    } else {
+                        //seconds = 10 * 60;
+                        seconds = 10;
+                        updateWaveDisplay();
+                        Bukkit.getOnlinePlayers().forEach((p) -> {
+                            int radius = 30;
+                            //Location[] locations = Util.Location.radius(p, radius);
+                            int amount = switch (waves) {
+                                case 1, 2, 3, 4, 5, 6 -> 5;
+                                case 7, 8 -> 10;
+                                default -> 0;
+                            };
+                            double damage = switch (waves) {
+                                case 1 -> 1.5;
+                                case 2 -> 3;
+                                case 3, 7 -> 5;
+                                case 4, 5 -> 2;
+                                case 6 -> 4;
+                                case 8 -> 6.5;
+                                default -> 0;
+                            };
+                            Zombie[] zombies = new Zombie[amount];
+                            for (int i = 0; i < zombies.length; i++) {
+                                //zombies[i] = spawnZombie(Random.randomChoice(locations), damage, armor[waves-1]);
+                                zombies[i] = spawnZombieAroundPlayer(p, radius, damage, armor[waves - 1]);
+                            }
+                            addZombie(p, zombies);
+                        });
+                    }
                 }
             }
         }.runTaskTimer(instance(), 0, 20);
