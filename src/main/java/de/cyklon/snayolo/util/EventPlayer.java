@@ -18,4 +18,5 @@ public interface EventPlayer {
     EventPlayer setSpectator(boolean spectator);
 
     boolean isSpectator();
+    void setWinner();
 }

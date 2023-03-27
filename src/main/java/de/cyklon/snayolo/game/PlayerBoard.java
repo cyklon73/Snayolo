@@ -100,6 +100,11 @@ public class PlayerBoard implements Constants {
             public boolean isSpectator() {
                 return getState().getSubState()==1;
             }
+
+            @Override
+            public void setWinner() {
+                //TODO mark as winner and teleport to winner space
+            }
         };
     }
 
