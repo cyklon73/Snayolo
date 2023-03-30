@@ -1,5 +1,6 @@
 package de.cyklon.snayolo.game;
 
+import de.cyklon.snayolo.Config;
 import de.cyklon.snayolo.util.Constants;
 import de.cyklon.snayolo.util.EventPlayer;
 import de.cyklon.snayolo.util.Util;
@@ -46,6 +47,8 @@ public class Game implements Constants {
         Bukkit.getOnlinePlayers().forEach((p) -> {
             p.setLevel(0);
             p.setExp(0);
+            p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
+            p.setFoodLevel(20);
             p.getInventory().clear();
             p.getActivePotionEffects().forEach((effect) -> p.removePotionEffect(effect.getType()));
         });
@@ -56,12 +59,20 @@ public class Game implements Constants {
         ep.setSpectator(true);
         if (instance().playerBoard.getLivingPlayerCount()==0) {
             instance().end();
-            //TODO ep win as last standing player
+            //TODO tp win as last standing player
+            ep.setWinner();
         }
     }
 
     private void updateWaveDisplay() {
         this.waveDisplay.setTitle(String.format("%sWaves %s%s%s/%s%s", ChatColor.YELLOW, ChatColor.AQUA, waves, ChatColor.DARK_GRAY, ChatColor.AQUA, totalWaves));
+    }
+
+    private void updateWorldBorder(World world, int wave) {
+        double size = Config.WorldBorder.borderSize.getDoubleValue(wave);
+        WorldBorder border = world.getWorldBorder();
+        double distance = Math.max(border.getSize(), size) - Math.min(border.getSize(), size);
+        border.setSize(size, (long) (distance*Config.WorldBorder.secondsPerBlock));
     }
 
     public void startCountdown() {
@@ -84,6 +95,11 @@ public class Game implements Constants {
         }.runTaskTimer(instance(), 0, 20);
     }
 
+    private void nextWave() {
+        waves++;
+        updateWorldBorder(eventWorld(), waves);
+    }
+
     private void gameCountdown() {
         state = 1;
         updateWaveDisplay();
@@ -100,7 +116,7 @@ public class Game implements Constants {
                     Bukkit.getOnlinePlayers().forEach((p) -> p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.BLUE + "Nächste Welle: " + ChatColor.GRAY + minutes)));
                     seconds--;
                 } else {
-                    waves++;
+                    nextWave();
                     if (waves>totalWaves) {
                         Collection<Player> winners = instance().playerBoard.getLivingPlayers();
                         instance().end();
