@@ -9,6 +9,8 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -17,9 +19,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.PressurePlate;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import static de.cyklon.snayolo.util.Util.asStack;
 
@@ -43,15 +47,20 @@ public class Game implements Constants {
         this.armor = Init.ARMOR();
     }
 
+    public void killZombies() {
+        Bukkit.getOnlinePlayers().forEach(this::killZombies);
+    }
+
+    public void killZombies(Player player) {
+        List<Zombie> zo = zombies.get(player.getUniqueId());
+        for (Zombie z : zo) {
+            z.setHealth(0);
+        }
+        zombies.remove(player.getUniqueId());
+    }
+
     public void start() {
-        Bukkit.getOnlinePlayers().forEach((p) -> {
-            p.setLevel(0);
-            p.setExp(0);
-            p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
-            p.setFoodLevel(20);
-            p.getInventory().clear();
-            p.getActivePotionEffects().forEach((effect) -> p.removePotionEffect(effect.getType()));
-        });
+        Bukkit.getOnlinePlayers().forEach(instance()::resetPlayerStats);
         startCountdown();
     }
 
@@ -71,12 +80,21 @@ public class Game implements Constants {
     private void updateWorldBorder(World world, int wave) {
         double size = Config.WorldBorder.borderSize.getDoubleValue(wave);
         WorldBorder border = world.getWorldBorder();
-        double distance = Math.max(border.getSize(), size) - Math.min(border.getSize(), size);
-        border.setSize(size, (long) (distance*Config.WorldBorder.secondsPerBlock));
+        border.setSize(size, TimeUnit.MINUTES, 10);
+    }
+
+    private void setupWorldBorder(World world) {
+        WorldBorder border = world.getWorldBorder();
+        border.setSize(Config.WorldBorder.borderSize.getDoubleValue(0));
+        border.setCenter(world.getSpawnLocation());
+        border.setDamageAmount(0.5);
+        border.setDamageBuffer(1);
+        border.setWarningDistance(5);
     }
 
     public void startCountdown() {
         state = 0;
+        setupWorldBorder(eventWorld());
         Bukkit.getOnlinePlayers().forEach(waveDisplay::addPlayer);
         new BukkitRunnable() {
             int seconds = 5;
@@ -172,22 +190,22 @@ public class Game implements Constants {
         Location playerLoc = player.getLocation();
         World world = playerLoc.getWorld();
         if (world==null) return null;
-        double angle = Math.random() * Math.PI * 2;
-        double x = 0;
-        double y = -9999;
-        double z = 0;
-        int c = 0;
-        while (y<player.getLocation().getY()-5) {
+        WorldBorder border = world.getWorldBorder();
+        double x, y, z, c = 0;
+        Location loc;
+        do {
             if (c==10) {
                 radius+=5;
                 c=0;
             }
+            double angle = Math.random() * Math.PI * 2;
             x = playerLoc.getX() + radius * Math.cos(angle);
             z = playerLoc.getZ() + radius * Math.sin(angle);
             y = getGroundLevel(world, x, playerLoc.getY()+3, z);
+            loc = new Location(world, x, y, z);
             c++;
-        }
-        Location loc = new Location(world, x, y, z);
+        } while (border.isInside(loc) || y<player.getLocation().getY()-5 || !isBlockSave(loc.getBlock(), true) || !isBlockSave(new Location(loc.getWorld(), loc.getX(), loc.getY()+1, loc.getZ()).getBlock(), false));
+
         Zombie zombie = (Zombie) world.spawnEntity(loc, EntityType.ZOMBIE);
         zombie.setRemoveWhenFarAway(false);
         EntityEquipment ee = zombie.getEquipment();
@@ -202,6 +220,25 @@ public class Game implements Constants {
         return zombie;
     }
 
+    private boolean isBlockSave(Block block, boolean bottom) {
+        return switch (block.getType()) {
+            case
+                    LAVA, FIRE, TRIPWIRE, TRIPWIRE_HOOK -> false;
+            case ACACIA_PRESSURE_PLATE, BAMBOO_PRESSURE_PLATE, BIRCH_PRESSURE_PLATE,
+                    CRIMSON_PRESSURE_PLATE, DARK_OAK_PRESSURE_PLATE, HEAVY_WEIGHTED_PRESSURE_PLATE,
+                    JUNGLE_PRESSURE_PLATE, LIGHT_WEIGHTED_PRESSURE_PLATE, MANGROVE_PRESSURE_PLATE,
+                    OAK_PRESSURE_PLATE, POLISHED_BLACKSTONE_PRESSURE_PLATE, SPRUCE_PRESSURE_PLATE,
+                    STONE_PRESSURE_PLATE, WARPED_PRESSURE_PLATE,
+
+                    ACACIA_TRAPDOOR, BAMBOO_TRAPDOOR, BIRCH_TRAPDOOR,
+                    CRIMSON_TRAPDOOR, DARK_OAK_TRAPDOOR, IRON_TRAPDOOR,
+                    JUNGLE_TRAPDOOR, MANGROVE_TRAPDOOR, OAK_TRAPDOOR,
+                    SPRUCE_TRAPDOOR, WARPED_TRAPDOOR, LEGACY_IRON_TRAPDOOR,
+                    LEGACY_TRAP_DOOR -> !bottom;
+            default -> true;
+        };
+    }
+
     private double getGroundLevel(World world, double x, double y, double z) {
         Location loc = new Location(world, x, y, z);
         while (loc.getBlock().getType() == Material.AIR && loc.getY() > 0) {
@@ -211,7 +248,7 @@ public class Game implements Constants {
     }
 
     public void destroyDisplay() {
-        Bukkit.getScheduler().runTask(instance(), waveDisplay::removeAll);
+        waveDisplay.removeAll();
     }
 
     private static class Init {

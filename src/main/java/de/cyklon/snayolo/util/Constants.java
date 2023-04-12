@@ -35,7 +35,7 @@ public interface Constants {
     }
 
     default World eventWorld() {
-        return Bukkit.getWorld(UUID.fromString("1aaec0d4-b2ad-4efa-a808-2de11d3ba717"));
+        return Bukkit.getWorld(UUID.fromString("ccb47895-c4d0-4fa2-b272-95d29c2a9222"));
     }
 
     default World lobbyWorld() {
