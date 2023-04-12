@@ -1,5 +1,6 @@
 de\cyklon\snayolo\Test.class
 de\cyklon\snayolo\game\PlayerBoard$PlayerState$SubState$State.class
+de\cyklon\snayolo\Config$WorldBorder.class
 de\cyklon\snayolo\game\PlayerBoard.class
 de\cyklon\snayolo\EntityHealthbar.class
 de\cyklon\snayolo\game\Game$Init.class
@@ -7,17 +8,20 @@ de\cyklon\snayolo\util\TabTemplates.class
 de\cyklon\snayolo\util\Util.class
 de\cyklon\snayolo\util\AdvancedHashMap$1.class
 de\cyklon\snayolo\listener\InteractionListener.class
+de\cyklon\snayolo\Config$WorldBorder$1.class
 de\cyklon\snayolo\game\EventZombie.class
 de\cyklon\snayolo\commands\WorldCMD.class
 de\cyklon\snayolo\game\PlayerBoard$PlayerState.class
 de\cyklon\snayolo\game\PlayerBoard$1.class
 de\cyklon\snayolo\game\Game$1.class
+de\cyklon\snayolo\util\WaveBase.class
 de\cyklon\snayolo\commands\ReloadChunkCMD.class
 de\cyklon\snayolo\commands\PermissionCMD.class
 de\cyklon\snayolo\util\AdvancedHashMap.class
 de\cyklon\snayolo\game\PlayerBoard$PlayerState$SubState.class
 de\cyklon\snayolo\game\Game.class
 de\cyklon\snayolo\Snayolo.class
+de\cyklon\snayolo\Config.class
 de\cyklon\snayolo\listener\DeathListener.class
 de\cyklon\snayolo\game\Game$2.class
 de\cyklon\snayolo\listener\ConnectionListener.class
