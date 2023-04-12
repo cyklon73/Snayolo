@@ -1,9 +1,15 @@
 package de.cyklon.snayolo.util;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
+
+import java.util.UUID;
 
 public class Util {
 
@@ -49,6 +55,18 @@ public class Util {
         }
     }
     public static class Location {
+
+        public static org.bukkit.Location fromVector(Vector vector, World world) {
+            return new org.bukkit.Location(world, vector.getX(), vector.getY(), vector.getZ());
+        }
+
+        public static org.bukkit.Location create(double x, double y, double z, UUID worldID) {
+            return new org.bukkit.Location(Bukkit.getWorld(worldID), x, y, z);
+        }
+
+        public static org.bukkit.Location create(double x, double y, double z, String worldName) {
+            return new org.bukkit.Location(Bukkit.getWorld(worldName), x, y, z);
+        }
 
         public static org.bukkit.Location[] radius(Player player, int radius) {
             return radius(player.getLocation(), radius);
